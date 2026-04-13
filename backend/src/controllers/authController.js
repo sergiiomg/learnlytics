@@ -1,4 +1,11 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
+const generateToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: '7d'
+  });
+};
 
 const register = async (req, res) => {
   try {
@@ -55,10 +62,54 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  res.status(200).json({
-    ok: true,
-    message: 'Endpoint de login pendiente de implementar'
-  });
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        ok: false,
+        message: 'Email y contraseña son obligatorios'
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+    if (!user) {
+      return res.status(401).json({
+        ok: false,
+        message: 'Credenciales inválidas'
+      });
+    }
+
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        ok: false,
+        message: 'Credenciales inválidas'
+      });
+    }
+
+    const token = generateToken(user._id);
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Login correcto',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    console.error('Error en login:', error);
+
+    return res.status(500).json({
+      ok: false,
+      message: 'Error interno del servidor'
+    });
+  }
 };
 
 module.exports = {
