@@ -112,7 +112,15 @@ const login = async (req, res) => {
   }
 };
 
+const getMe = async (req, res) => {
+  return res.status(200).json({
+    ok: true,
+    user: req.user
+  });
+};
+
 module.exports = {
   register,
-  login
+  login,
+  getMe
 };
