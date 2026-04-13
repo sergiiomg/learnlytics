@@ -15,4 +15,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.use((req, res) => {
+  res.status(404).json({
+    ok: false,
+    message: 'Ruta no encontrada'
+  });
+});
+
 module.exports = app;
