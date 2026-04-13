@@ -4,6 +4,7 @@ const morgan = require('morgan');
 
 const authRoutes = require('./routes/authRoutes');
 const subjectRoutes = require('./routes/subjectRoutes');
+const studySessionRoutes = require('./routes/studySessionRoutes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectRoutes);
+app.use('/api/study-sessions', studySessionRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
