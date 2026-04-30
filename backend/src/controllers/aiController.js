@@ -178,6 +178,133 @@ const analyzeWithAI = async (req, res) => {
   }
 };
 
+const analyzeSubjectWithAI = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { subjectId } = req.params;
+
+    const subject = await Subject.findOne({
+      _id: subjectId,
+      user: userId
+    });
+
+    if (!subject) {
+      return res.status(404).json({
+        ok: false,
+        message: 'Asignatura no encontrada'
+      });
+    }
+
+    const [studySessions, exams] = await Promise.all([
+      StudySession.find({ user: userId, subject: subjectId })
+        .populate('subject', 'name color')
+        .sort({ date: -1, createdAt: -1 }),
+      Exam.find({ user: userId, subject: subjectId })
+        .populate('subject', 'name color')
+        .sort({ date: -1, createdAt: -1 })
+    ]);
+
+    if (studySessions.length < 3 || exams.length < 1) {
+      return res.status(400).json({
+        ok: false,
+        message:
+          'Se necesitan al menos 3 sesiones de estudio y 1 examen en esta asignatura para generar un análisis útil'
+      });
+    }
+
+    const totalStudyMinutes = studySessions.reduce((acc, session) => {
+      return acc + session.durationMinutes;
+    }, 0);
+
+    const totalStudyHours = Number((totalStudyMinutes / 60).toFixed(2));
+
+    const averageConcentration = Number(
+      (
+        studySessions.reduce((acc, session) => acc + session.concentrationLevel, 0) /
+        studySessions.length
+      ).toFixed(2)
+    );
+
+    const studyMethodCountMap = {};
+
+    for (const session of studySessions) {
+      const method = session.studyMethod;
+      studyMethodCountMap[method] = (studyMethodCountMap[method] || 0) + 1;
+    }
+
+    let mostUsedStudyMethod = null;
+    let maxMethodCount = 0;
+
+    for (const method in studyMethodCountMap) {
+      if (studyMethodCountMap[method] > maxMethodCount) {
+        maxMethodCount = studyMethodCountMap[method];
+        mostUsedStudyMethod = method;
+      }
+    }
+
+    const averageScore = Number(
+      (exams.reduce((acc, exam) => acc + exam.score, 0) / exams.length).toFixed(2)
+    );
+
+    const summary = {
+      analysisType: 'subject',
+      subjectId: subject._id,
+      subjectName: subject.name,
+      subjectColor: subject.color,
+      totalStudySessions: studySessions.length,
+      totalExams: exams.length,
+      totalStudyMinutes,
+      totalStudyHours,
+      averageConcentration,
+      mostUsedStudyMethod,
+      averageScore
+    };
+
+    const formattedRecentStudySessions = studySessions.slice(0, 5).map((session) => ({
+      subject: session.subject?.name || subject.name,
+      date: session.date,
+      startTime: session.startTime,
+      endTime: session.endTime,
+      durationMinutes: session.durationMinutes,
+      studyMethod: session.studyMethod,
+      concentrationLevel: session.concentrationLevel,
+      notes: session.notes
+    }));
+
+    const formattedRecentExams = exams.slice(0, 5).map((exam) => ({
+      subject: exam.subject?.name || subject.name,
+      title: exam.title,
+      date: exam.date,
+      score: exam.score,
+      notes: exam.notes
+    }));
+
+    const analysis = await analyzeStudyData({
+      summary,
+      recentStudySessions: formattedRecentStudySessions,
+      recentExams: formattedRecentExams
+    });
+
+    return res.status(200).json({
+      ok: true,
+      subject: {
+        id: subject._id,
+        name: subject.name,
+        color: subject.color
+      },
+      analysis
+    });
+  } catch (error) {
+    console.error('Error en analyzeSubjectWithAI:', error);
+
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al generar el análisis por asignatura'
+    });
+  }
+};
+
 module.exports = {
-  analyzeWithAI
+  analyzeWithAI,
+  analyzeSubjectWithAI
 };
