@@ -7,6 +7,7 @@ const subjectRoutes = require('./routes/subjectRoutes');
 const studySessionRoutes = require('./routes/studySessionRoutes');
 const examRoutes = require('./routes/examRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api/subjects', subjectRoutes);
 app.use('/api/study-sessions', studySessionRoutes);
 app.use('/api/exams', examRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
