@@ -1,13 +1,26 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>dashboard</ion-title>
+    <ion-title>Learnlytics</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        Salir
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <h2>Panel principal</h2>
+  <p>Bienvenido a tu espacio de análisis académico.</p>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Estado del proyecto</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Autenticación conectada correctamente.</p>
+      <p>Próximo paso: conectar asignaturas, sesiones, exámenes, analytics e IA.</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
