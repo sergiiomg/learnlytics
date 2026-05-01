@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Asignaturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Nueva asignatura</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Color</ion-label>
+        <ion-input type="color" [(ngModel)]="color"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea [(ngModel)]="description"></ion-textarea>
+      </ion-item>
+
+      <ion-button expand="block" class="ion-margin-top" (click)="createSubject()">
+        Crear asignatura
+      </ion-button>
+
+      <ion-text color="danger" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
+      </ion-text>
+
+      <ion-text color="success" *ngIf="successMessage">
+        <p>{{ successMessage }}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="section-title">
+    <h2>Mis asignaturas</h2>
+  </div>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-text color="medium" *ngIf="!loading && subjects.length === 0">
+    <p>No tienes asignaturas todavía.</p>
+  </ion-text>
+
+  <ion-list *ngIf="!loading && subjects.length > 0">
+    <ion-card *ngFor="let subject of subjects">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-badge [style.background]="subject.color">
+            &nbsp;
+          </ion-badge>
+          {{ subject.name }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p *ngIf="subject.description">{{ subject.description }}</p>
+        <p *ngIf="!subject.description">Sin descripción</p>
+
+        <ion-button
+          color="danger"
+          fill="outline"
+          size="small"
+          (click)="deleteSubject(subject._id)"
+        >
+          Eliminar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

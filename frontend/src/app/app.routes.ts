@@ -32,11 +32,19 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
-      }
+      },
+      {
+        path: 'subjects',
+        loadComponent: () => import('./pages/subjects/subjects.page').then( m => m.SubjectsPage)
+      },
     ]
   },
   {
     path: '**',
     redirectTo: 'login'
+  },
+  {
+    path: 'subjects',
+    loadComponent: () => import('./pages/subjects/subjects.page').then( m => m.SubjectsPage)
   },
 ];
