@@ -7,7 +7,7 @@
 <ion-content class="ion-padding">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Nueva asignatura</ion-card-title>
+      {{ editingSubjectId ? 'Editar asignatura' : 'Nueva asignatura' }}
     </ion-card-header>
 
     <ion-card-content>
@@ -26,8 +26,18 @@
         <ion-textarea [(ngModel)]="description"></ion-textarea>
       </ion-item>
 
-      <ion-button expand="block" class="ion-margin-top" (click)="createSubject()">
-        Crear asignatura
+      <ion-button expand="block" class="ion-margin-top" (click)="saveSubject()">
+        {{ editingSubjectId ? 'Actualizar asignatura' : 'Crear asignatura' }}
+      </ion-button>
+
+      <ion-button
+        *ngIf="editingSubjectId"
+        expand="block"
+        fill="clear"
+        color="medium"
+        (click)="cancelEdit()"
+      >
+        Cancelar edición
       </ion-button>
 
       <ion-text color="danger" *ngIf="errorMessage">
@@ -64,6 +74,15 @@
       <ion-card-content>
         <p *ngIf="subject.description">{{ subject.description }}</p>
         <p *ngIf="!subject.description">Sin descripción</p>
+
+        <ion-button
+          color="primary"
+          fill="outline"
+          size="small"
+          (click)="startEdit(subject)"
+        >
+          Editar
+        </ion-button>
 
         <ion-button
           color="danger"

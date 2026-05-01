@@ -18,6 +18,8 @@ export class SubjectsPage implements OnInit {
   color = '#3b82f6';
   description = '';
 
+  editingSubjectId: string | null = null;
+
   loading = false;
   errorMessage = '';
   successMessage = '';
@@ -75,6 +77,59 @@ export class SubjectsPage implements OnInit {
     });
   }
 
+  startEdit(subject: Subject): void {
+  this.editingSubjectId = subject._id;
+  this.name = subject.name;
+  this.color = subject.color;
+  this.description = subject.description || '';
+  this.errorMessage = '';
+  this.successMessage = '';
+}
+
+cancelEdit(): void {
+  this.editingSubjectId = null;
+  this.name = '';
+  this.color = '#3b82f6';
+  this.description = '';
+  this.errorMessage = '';
+  this.successMessage = '';
+}
+
+saveSubject(): void {
+  if (this.editingSubjectId) {
+    this.updateSubject();
+  } else {
+    this.createSubject();
+  }
+}
+
+updateSubject(): void {
+  if (!this.editingSubjectId) return;
+
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  if (!this.name.trim()) {
+    this.errorMessage = 'El nombre es obligatorio';
+    return;
+  }
+
+  this.subjectService.updateSubject(this.editingSubjectId, {
+    name: this.name,
+    color: this.color,
+    description: this.description
+  }).subscribe({
+    next: () => {
+      this.successMessage = 'Asignatura actualizada correctamente';
+      this.cancelEdit();
+      this.loadSubjects();
+    },
+    error: (error) => {
+      this.errorMessage = error.error?.message || 'Error al actualizar asignatura';
+    }
+  });
+}
+
   deleteSubject(id: string): void {
     const confirmed = confirm('¿Seguro que quieres eliminar esta asignatura?');
 
@@ -82,6 +137,10 @@ export class SubjectsPage implements OnInit {
 
     this.subjectService.deleteSubject(id).subscribe({
       next: () => {
+        if (this.editingSubjectId === id) {
+          this.cancelEdit();
+        }
+      
         this.loadSubjects();
       },
       error: (error) => {
