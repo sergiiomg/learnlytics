@@ -37,7 +37,12 @@ export const routes: Routes = [
         path: 'subjects',
         loadComponent: () => import('./pages/subjects/subjects.page').then( m => m.SubjectsPage)
       },
-    ]
+      {
+        path: 'study-sessions',
+        loadComponent: () =>
+          import('./pages/study-sessions/study-sessions.page').then(m => m.StudySessionsPage)
+      },
+          ]
   },
   {
     path: '**',
@@ -46,5 +51,9 @@ export const routes: Routes = [
   {
     path: 'subjects',
     loadComponent: () => import('./pages/subjects/subjects.page').then( m => m.SubjectsPage)
+  },
+  {
+    path: 'study-sessions',
+    loadComponent: () => import('./pages/study-sessions/study-sessions.page').then( m => m.StudySessionsPage)
   },
 ];

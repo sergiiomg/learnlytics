@@ -1,0 +1,151 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sesiones de estudio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        {{ editingSessionId ? 'Editar sesión' : 'Nueva sesión' }}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-text color="medium" *ngIf="subjects.length === 0">
+        <p>Primero debes crear una asignatura.</p>
+      </ion-text>
+
+      <ion-item>
+        <ion-label>Asignatura</ion-label>
+        <ion-select [(ngModel)]="subject">
+          <ion-select-option *ngFor="let item of subjects" [value]="item._id">
+            {{ item.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Fecha</ion-label>
+        <ion-input type="date" [(ngModel)]="date"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Hora inicio</ion-label>
+        <ion-input type="time" [(ngModel)]="startTime"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Hora fin</ion-label>
+        <ion-input type="time" [(ngModel)]="endTime"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Duración minutos</ion-label>
+        <ion-input type="number" [(ngModel)]="durationMinutes"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Método</ion-label>
+        <ion-select [(ngModel)]="studyMethod">
+          <ion-select-option value="Pomodoro">Pomodoro</ion-select-option>
+          <ion-select-option value="Lectura">Lectura</ion-select-option>
+          <ion-select-option value="Resúmenes">Resúmenes</ion-select-option>
+          <ion-select-option value="Ejercicios prácticos">Ejercicios prácticos</ion-select-option>
+          <ion-select-option value="Test">Test</ion-select-option>
+          <ion-select-option value="Mapas conceptuales">Mapas conceptuales</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Concentración</ion-label>
+        <ion-select [(ngModel)]="concentrationLevel">
+          <ion-select-option [value]="1">1 - Muy baja</ion-select-option>
+          <ion-select-option [value]="2">2 - Baja</ion-select-option>
+          <ion-select-option [value]="3">3 - Media</ion-select-option>
+          <ion-select-option [value]="4">4 - Alta</ion-select-option>
+          <ion-select-option [value]="5">5 - Muy alta</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Notas</ion-label>
+        <ion-textarea [(ngModel)]="notes"></ion-textarea>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="saveStudySession()"
+        [disabled]="subjects.length === 0"
+      >
+        {{ editingSessionId ? 'Actualizar sesión' : 'Crear sesión' }}
+      </ion-button>
+
+      <ion-button
+        *ngIf="editingSessionId"
+        expand="block"
+        fill="clear"
+        color="medium"
+        (click)="cancelEdit()"
+      >
+        Cancelar edición
+      </ion-button>
+
+      <ion-text color="danger" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
+      </ion-text>
+
+      <ion-text color="success" *ngIf="successMessage">
+        <p>{{ successMessage }}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <h2>Historial</h2>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-text color="medium" *ngIf="!loading && studySessions.length === 0">
+    <p>No tienes sesiones registradas todavía.</p>
+  </ion-text>
+
+  <ion-list *ngIf="!loading && studySessions.length > 0">
+    <ion-card *ngFor="let session of studySessions">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-badge [style.background]="session.subject.color">&nbsp;</ion-badge>
+          {{ session.subject.name }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Fecha:</strong> {{ session.date | date:'dd/MM/yyyy' }}</p>
+        <p><strong>Horario:</strong> {{ session.startTime }} - {{ session.endTime }}</p>
+        <p><strong>Duración:</strong> {{ session.durationMinutes }} min</p>
+        <p><strong>Método:</strong> {{ session.studyMethod }}</p>
+        <p><strong>Concentración:</strong> {{ session.concentrationLevel }}/5</p>
+        <p *ngIf="session.notes"><strong>Notas:</strong> {{ session.notes }}</p>
+
+        <ion-button
+          color="primary"
+          fill="outline"
+          size="small"
+          (click)="startEdit(session)"
+        >
+          Editar
+        </ion-button>
+
+        <ion-button
+          color="danger"
+          fill="outline"
+          size="small"
+          (click)="deleteStudySession(session._id)"
+        >
+          Eliminar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>
