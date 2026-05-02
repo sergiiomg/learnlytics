@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Exámenes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        {{ editingExamId ? 'Editar examen' : 'Nuevo examen' }}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-text color="medium" *ngIf="subjects.length === 0">
+        <p>Primero debes crear una asignatura.</p>
+      </ion-text>
+
+      <ion-item>
+        <ion-label>Asignatura</ion-label>
+        <ion-select [(ngModel)]="subject">
+          <ion-select-option *ngFor="let item of subjects" [value]="item._id">
+            {{ item.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Título</ion-label>
+        <ion-input [(ngModel)]="title"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Fecha</ion-label>
+        <ion-input type="date" [(ngModel)]="date"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Nota</ion-label>
+        <ion-input type="number" min="0" max="10" step="0.1" [(ngModel)]="score"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Anotaciones</ion-label>
+        <ion-textarea [(ngModel)]="notes"></ion-textarea>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="saveExam()"
+        [disabled]="subjects.length === 0"
+      >
+        {{ editingExamId ? 'Actualizar examen' : 'Crear examen' }}
+      </ion-button>
+
+      <ion-button
+        *ngIf="editingExamId"
+        expand="block"
+        fill="clear"
+        color="medium"
+        (click)="cancelEdit()"
+      >
+        Cancelar edición
+      </ion-button>
+
+      <ion-text color="danger" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
+      </ion-text>
+
+      <ion-text color="success" *ngIf="successMessage">
+        <p>{{ successMessage }}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <h2>Historial</h2>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-text color="medium" *ngIf="!loading && exams.length === 0">
+    <p>No tienes exámenes registrados todavía.</p>
+  </ion-text>
+
+  <ion-list *ngIf="!loading && exams.length > 0">
+    <ion-card *ngFor="let exam of exams">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-badge [style.background]="exam.subject.color">&nbsp;</ion-badge>
+          {{ exam.title }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Asignatura:</strong> {{ exam.subject.name }}</p>
+        <p><strong>Fecha:</strong> {{ exam.date | date:'dd/MM/yyyy' }}</p>
+        <p><strong>Nota:</strong> {{ exam.score }}/10</p>
+        <p *ngIf="exam.notes"><strong>Notas:</strong> {{ exam.notes }}</p>
+
+        <ion-button
+          color="primary"
+          fill="outline"
+          size="small"
+          (click)="startEdit(exam)"
+        >
+          Editar
+        </ion-button>
+
+        <ion-button
+          color="danger"
+          fill="outline"
+          size="small"
+          (click)="deleteExam(exam._id)"
+        >
+          Eliminar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

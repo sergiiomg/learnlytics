@@ -42,6 +42,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/study-sessions/study-sessions.page').then(m => m.StudySessionsPage)
       },
+      {
+        path: 'exams',
+        loadComponent: () =>
+          import('./pages/exams/exams.page').then(m => m.ExamsPage)
+      },
           ]
   },
   {
@@ -55,5 +60,9 @@ export const routes: Routes = [
   {
     path: 'study-sessions',
     loadComponent: () => import('./pages/study-sessions/study-sessions.page').then( m => m.StudySessionsPage)
+  },
+  {
+    path: 'exams',
+    loadComponent: () => import('./pages/exams/exams.page').then( m => m.ExamsPage)
   },
 ];
