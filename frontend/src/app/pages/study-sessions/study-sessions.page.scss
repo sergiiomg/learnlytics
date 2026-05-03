@@ -1,5 +1,5 @@
 ion-card {
-  border-radius: 16px;
+  border-radius: 18px;
 }
 
 ion-badge {
@@ -12,5 +12,32 @@ ion-badge {
 }
 
 h2 {
-  margin-top: 24px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 26px;
+  margin-bottom: 12px;
+}
+
+ion-card-content p {
+  line-height: 1.4;
+}
+
+ion-button {
+  margin-right: 6px;
+  margin-top: 8px;
+}
+
+ion-card {
+  background: #1e293b;
+  --background: #1e293b;
+  overflow: hidden;
+}
+
+ion-card-header,
+ion-card-content {
+  background: transparent;
+}
+
+ion-list {
+  background: transparent;
 }

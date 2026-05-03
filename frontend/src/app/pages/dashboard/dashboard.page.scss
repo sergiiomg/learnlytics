@@ -1,26 +1,23 @@
-.subtitle {
-  color: var(--ion-color-medium);
-  margin-bottom: 16px;
-}
-
 .stat-card {
   text-align: center;
-  border-radius: 16px;
+  border-radius: 18px;
+
+  ion-card-content {
+    padding: 18px 10px;
+  }
 
   h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 2rem;
+    font-weight: 900;
     margin: 0;
+    color: var(--ion-color-primary);
   }
 
   p {
-    margin: 4px 0 0;
+    margin: 6px 0 0;
     color: var(--ion-color-medium);
+    font-size: 0.9rem;
   }
-}
-
-ion-card {
-  border-radius: 16px;
 }
 
 .subject-row {
@@ -28,7 +25,7 @@ ion-card {
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid var(--ion-color-light);
+  border-bottom: 1px solid #e2e8f0;
 
   &:last-child {
     border-bottom: none;
