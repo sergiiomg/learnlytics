@@ -47,7 +47,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/exams/exams.page').then(m => m.ExamsPage)
       },
-          ]
+      {
+        path: 'ai-analysis',
+        loadComponent: () =>
+          import('./pages/ai-analysis/ai-analysis.page').then(m => m.AiAnalysisPage)
+      },
+    ]
   },
   {
     path: '**',
@@ -64,5 +69,9 @@ export const routes: Routes = [
   {
     path: 'exams',
     loadComponent: () => import('./pages/exams/exams.page').then( m => m.ExamsPage)
+  },
+  {
+    path: 'ai-analysis',
+    loadComponent: () => import('./pages/ai-analysis/ai-analysis.page').then( m => m.AiAnalysisPage)
   },
 ];

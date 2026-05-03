@@ -1,0 +1,23 @@
+.subtitle {
+  color: var(--ion-color-medium);
+  margin-bottom: 16px;
+}
+
+ion-card {
+  border-radius: 16px;
+}
+
+section {
+  margin-bottom: 20px;
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+}

@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Análisis IA</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p class="subtitle">
+    Genera recomendaciones personalizadas a partir de tus sesiones y exámenes.
+  </p>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Análisis general</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Evalúa tu rendimiento global teniendo en cuenta todas tus asignaturas.</p>
+
+      <ion-button expand="block" (click)="analyzeGeneral()" [disabled]="loading">
+        Generar análisis general
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Análisis por asignatura</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-text color="medium" *ngIf="subjects.length === 0">
+        <p>Primero debes crear una asignatura.</p>
+      </ion-text>
+
+      <ion-item>
+        <ion-label>Asignatura</ion-label>
+        <ion-select [(ngModel)]="selectedSubjectId">
+          <ion-select-option *ngFor="let subject of subjects" [value]="subject._id">
+            {{ subject.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="analyzeSubject()"
+        [disabled]="loading || subjects.length === 0"
+      >
+        Analizar asignatura
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ion-text color="danger" *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </ion-text>
+
+  <ion-card *ngIf="analysis">
+    <ion-card-header>
+      <ion-card-title>{{ analysisTitle }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <section>
+        <h3>Resumen</h3>
+        <p>{{ analysis!.summary }}</p>
+      </section>
+
+      <section>
+        <h3>Fortalezas</h3>
+        <ion-list>
+          <p *ngFor="let item of analysis.strengths">✅ {{ item }}</p>
+        </ion-list>
+      </section>
+
+      <section>
+        <h3>Debilidades</h3>
+        <ion-list>
+          <p *ngFor="let item of analysis.weaknesses">⚠️ {{ item }}</p>
+        </ion-list>
+      </section>
+
+      <section>
+        <h3>Recomendaciones</h3>
+        <ion-list>
+          <p *ngFor="let item of analysis.recommendations">💡 {{ item }}</p>
+        </ion-list>
+      </section>
+
+      <section>
+        <h3>Patrones detectados</h3>
+        <ion-list>
+          <p *ngFor="let item of analysis.detectedPatterns">📊 {{ item }}</p>
+        </ion-list>
+      </section>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
